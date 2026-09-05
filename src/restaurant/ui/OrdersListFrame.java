@@ -88,8 +88,13 @@ public class OrdersListFrame extends JFrame {
 
             status.setText(orders.isEmpty()
                     ? "No orders yet · " + orderStore.file()
-                    : orders.size() + " orders · " + orderStore.file());
+                    : orders.size() + (orders.size() == 1 ? " order · " : " orders · ") + orderStore.file());
         } catch (IOException e) {
+            // Clear the list as well as reporting the failure. Leaving the old
+            // rows and the old count on screen behind the dialog would show the
+            // manager a queue that looks current and is not.
+            model.clear();
+            status.setText("Could not read " + orderStore.file());
             JOptionPane.showMessageDialog(this,
                     "Could not read the orders file: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
