@@ -6,6 +6,7 @@ import restaurant.store.Config;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -95,6 +96,13 @@ public class ManagerLoginFrame extends JFrame {
                 message.setText("Those details don't match an account.");
                 passwordField.setText("");
             }
+        } catch (RuntimeException e) {
+            // A missing or malformed password hash in the config throws here.
+            // Without this the exception escapes onto the event dispatch thread
+            // and the button simply appears to do nothing.
+            JOptionPane.showMessageDialog(this,
+                    "Sign in failed: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             Arrays.fill(typed, '\0');
         }
